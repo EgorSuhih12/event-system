@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Учебный прототип системы сопровождения мероприятий" />
+    <title>Система сопровождения мероприятий</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="#dashboard" data-page-link="dashboard">
+          <span class="brand-mark">СМ</span>
+          <span class="brand-text">
+            <strong>Система сопровождения</strong>
+            <small>мероприятий</small>
+          </span>
+        </a>
+
+        <button
+          class="menu-button"
+          id="menuButton"
+          type="button"
+          aria-label="Открыть меню"
+          aria-expanded="false"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav class="main-nav" id="mainNav" aria-label="Основное меню">
+          <button class="nav-button active" type="button" data-page="dashboard">Главная</button>
+          <button class="nav-button" type="button" data-page="events">Мероприятия</button>
+          <button class="nav-button" type="button" data-page="participants" data-min-role="manager">Участники</button>
+          <button class="nav-button" type="button" data-page="approvals" data-min-role="admin">Согласование</button>
+          <button class="nav-button nav-profile" type="button" data-page="profile">
+            Профиль
+            <span id="headerRoleLabel">Администратор</span>
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <section class="page active" id="dashboard" aria-labelledby="dashboardTitle">
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">Панель управления</p>
+            <h1 id="dashboardTitle">Обзор мероприятий</h1>
+            <p>Основные показатели и ближайшие события организации.</p>
+          </div>
+          <button class="button button-primary" type="button" data-open-event-form data-min-role="manager">
+            Создать мероприятие
+          </button>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card stat-card-blue">
+            <span>Всего мероприятий</span>
+            <strong id="eventsCount">0</strong>
+            <small>в реестре системы</small>
+          </article>
+          <article class="stat-card stat-card-green">
+            <span>Участники</span>
+            <strong id="participantsCount">0</strong>
+            <small>зарегистрировано</small>
+          </article>
+          <article class="stat-card stat-card-orange">
+            <span>На согласовании</span>
+            <strong id="approvalsCount">0</strong>
+            <small>ожидают решения</small>
+          </article>
+        </div>
+
+        <section class="content-block">
+          <div class="section-heading">
+            <div>
+              <h2>Ближайшие мероприятия</h2>
+              <p>События отсортированы по дате проведения.</p>
+            </div>
+            <button class="button button-secondary" type="button" data-page-jump="events">
+              Открыть список
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Название</th>
+                  <th>Дата</th>
+                  <th>Место</th>
+                  <th>Формат</th>
+                  <th>Статус</th>
+                </tr>
+              </thead>
+              <tbody id="upcomingEventsBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <section class="page" id="events" aria-labelledby="eventsTitle">
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">Реестр</p>
+            <h1 id="eventsTitle">Мероприятия</h1>
+            <p>Создание, редактирование и контроль статусов мероприятий.</p>
+          </div>
+          <button class="button button-primary" type="button" data-open-event-form data-min-role="manager">
+            Добавить мероприятие
+          </button>
+        </div>
+
+        <section class="content-block">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Название</th>
+                  <th>Тип</th>
+                  <th>Дата и место</th>
+                  <th>Формат</th>
+                  <th>Участники</th>
+                  <th>Бюджет</th>
+                  <th>Статус</th>
+                  <th class="actions-column" id="eventsActionsHeader">Действия</th>
+                </tr>
+              </thead>
+              <tbody id="eventsTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <section class="page" id="participants" aria-labelledby="participantsTitle">
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">Регистрация</p>
+            <h1 id="participantsTitle">Участники</h1>
+            <p>Список зарегистрированных студентов, сотрудников и гостей.</p>
+          </div>
+          <button class="button button-primary" id="openParticipantForm" type="button" data-min-role="manager">
+            Добавить участника
+          </button>
+        </div>
+
+        <section class="content-block">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ФИО</th>
+                  <th>Email</th>
+                  <th>Категория</th>
+                  <th>Мероприятие</th>
+                  <th class="actions-column">Действия</th>
+                </tr>
+              </thead>
+              <tbody id="participantsTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <section class="page" id="approvals" aria-labelledby="approvalsTitle">
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">Работа администратора</p>
+            <h1 id="approvalsTitle">Согласование</h1>
+            <p>Одобрение мероприятий или возврат организатору на доработку.</p>
+          </div>
+        </div>
+
+        <div class="process-strip" aria-label="Этапы согласования">
+          <div><span>1</span><strong>Создание</strong><small>Организатор заполняет карточку</small></div>
+          <div><span>2</span><strong>Проверка</strong><small>Администратор изучает данные</small></div>
+          <div><span>3</span><strong>Решение</strong><small>Одобрение или возврат</small></div>
+        </div>
+
+        <div class="approval-list" id="approvalList"></div>
+      </section>
+
+      <section class="page" id="profile" aria-labelledby="profileTitle">
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">Учётная запись</p>
+            <h1 id="profileTitle">Профиль пользователя</h1>
+            <p>Личные данные и демонстрационное переключение прав доступа.</p>
+          </div>
+        </div>
+
+        <div class="profile-layout">
+          <section class="profile-panel profile-summary">
+            <div class="profile-avatar" id="profileAvatar">ЕМ</div>
+            <div>
+              <span class="status status-approved" id="profileRoleBadge">Администратор</span>
+              <h2 id="profileDisplayName">Егор Макаров</h2>
+              <p id="profileDisplayEmail">egor.makarov@example.ru</p>
+            </div>
+          </section>
+
+          <section class="profile-panel">
+            <div class="section-heading profile-heading">
+              <div>
+                <h2>Личные данные</h2>
+                <p>Информация сохраняется только в этом браузере.</p>
+              </div>
+            </div>
+            <form class="profile-form" id="profileForm">
+              <label class="field">
+                <span>ФИО</span>
+                <input id="profileName" type="text" maxlength="100" required />
+              </label>
+              <label class="field">
+                <span>Email</span>
+                <input id="profileEmail" type="email" maxlength="100" required />
+              </label>
+              <button class="button button-primary" type="submit">Сохранить профиль</button>
+            </form>
+          </section>
+
+          <section class="profile-panel role-panel">
+            <div class="section-heading profile-heading">
+              <div>
+                <h2>Роль в системе</h2>
+                <p>Выберите роль, чтобы увидеть соответствующий интерфейс.</p>
+              </div>
+            </div>
+            <div class="role-switcher" role="radiogroup" aria-label="Роль пользователя">
+              <label class="role-option">
+                <input type="radio" name="userRole" value="user" />
+                <span><strong>Обычный пользователь</strong><small>Просмотр главной страницы и мероприятий</small></span>
+              </label>
+              <label class="role-option">
+                <input type="radio" name="userRole" value="manager" />
+                <span><strong>Управляющий</strong><small>Работа с мероприятиями и участниками</small></span>
+              </label>
+              <label class="role-option">
+                <input type="radio" name="userRole" value="admin" />
+                <span><strong>Администратор</strong><small>Полный доступ, включая согласование</small></span>
+              </label>
+            </div>
+            <div class="access-note">
+              <strong>Текущий доступ</strong>
+              <span id="roleCapabilities"></span>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <dialog class="modal" id="eventDialog">
+      <form class="modal-form" id="eventForm">
+        <div class="modal-heading">
+          <div>
+            <p class="eyebrow">Карточка мероприятия</p>
+            <h2 id="eventDialogTitle">Новое мероприятие</h2>
+          </div>
+          <button class="close-button" type="button" data-close-dialog aria-label="Закрыть">×</button>
+        </div>
+
+        <input id="eventId" type="hidden" />
+        <div class="form-grid">
+          <label class="field field-wide">
+            <span>Название</span>
+            <input id="eventName" type="text" maxlength="100" required />
+          </label>
+          <label class="field">
+            <span>Тип мероприятия</span>
+            <select id="eventType" required>
+              <option value="">Выберите тип</option>
+              <option>Конференция</option>
+              <option>Семинар</option>
+              <option>Фестиваль</option>
+              <option>Деловая встреча</option>
+              <option>Другое</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Дата проведения</span>
+            <input id="eventDate" type="date" required />
+          </label>
+          <label class="field field-wide">
+            <span>Место</span>
+            <input id="eventPlace" type="text" maxlength="100" required />
+          </label>
+          <label class="field">
+            <span>Формат</span>
+            <select id="eventFormat" required>
+              <option>Очное</option>
+              <option>Онлайн</option>
+              <option>Гибридное</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Количество участников</span>
+            <input id="eventParticipants" type="number" min="1" max="100000" required />
+          </label>
+          <label class="field">
+            <span>Бюджет, ₽</span>
+            <input id="eventBudget" type="number" min="0" step="100" required />
+          </label>
+          <label class="field">
+            <span>Статус</span>
+            <select id="eventStatus" disabled>
+              <option>Черновик</option>
+              <option>На согласовании</option>
+              <option>Одобрено</option>
+              <option>Завершено</option>
+            </select>
+          </label>
+        </div>
+        <div class="modal-actions">
+          <button class="button button-secondary" type="button" data-close-dialog>Отмена</button>
+          <button class="button button-primary" type="submit">Сохранить</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="modal modal-small" id="participantDialog">
+      <form class="modal-form" id="participantForm">
+        <div class="modal-heading">
+          <div>
+            <p class="eyebrow">Регистрация</p>
+            <h2>Новый участник</h2>
+          </div>
+          <button class="close-button" type="button" data-close-dialog aria-label="Закрыть">×</button>
+        </div>
+        <div class="form-grid single-column">
+          <label class="field">
+            <span>ФИО</span>
+            <input id="participantName" type="text" maxlength="100" required />
+          </label>
+          <label class="field">
+            <span>Email</span>
+            <input id="participantEmail" type="email" maxlength="100" required />
+          </label>
+          <label class="field">
+            <span>Категория</span>
+            <select id="participantCategory" required>
+              <option>Студент</option>
+              <option>Сотрудник</option>
+              <option>Гость</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Мероприятие</span>
+            <select id="participantEvent" required></select>
+          </label>
+        </div>
+        <div class="modal-actions">
+          <button class="button button-secondary" type="button" data-close-dialog>Отмена</button>
+          <button class="button button-primary" type="submit">Добавить</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="js/storage.js" defer></script>
+    <script src="js/app.js" defer></script>
+    <script src="js/events.js" defer></script>
+    <script src="js/participants.js" defer></script>
+  </body>
+</html>
